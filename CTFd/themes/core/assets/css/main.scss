@@ -1,4 +1,5 @@
-@import "~bootstrap/scss/bootstrap.scss";
+@import "includes/bootstrap.css";
+@import "includes/variables-boostrap.scss";
 @import "~highlight.js/styles/github.css";
 @import "includes/jumbotron.css";
 @import "includes/sticky-footer.css";
@@ -7,15 +8,12 @@
 @import "includes/utils/opacity.scss";
 @import "includes/utils/min-height.scss";
 
-html,
-body,
-.container {
-  font-family: "Lato", "LatoOffline", sans-serif;
+:root {
+  font-family: $font-family-base;
 }
 
 h1,
 h2 {
-  font-family: "Raleway", "RalewayOffline", sans-serif;
   font-weight: 500;
   letter-spacing: 2px;
 }
