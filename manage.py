@@ -76,5 +76,29 @@ def import_ctf(path):
         import_ctf_util(path)
 
 
+# TODO: Add commands to add and remove challenges.
+#  @manager.command
+#  def push_task(path):
+#      from CTFd.models import Challenges, db
+#
+#      path = Path(path)
+#      config = read_yml(path / 'task.yml')
+#
+#      data = {
+#          'name': config['title'],
+#          'description': config['desc'],
+#      }
+#
+#      with app.app_context():
+#          challenge = Challenges.query.filter_by(task_id=path.name).one()
+#          if challenge:
+#              for k, v in data.items():
+#                  setattr(challenge, k, v)
+#          else:
+#              challenge = Challenges(**data)
+#              db.session.add(challenge)
+#          db.session.commit()
+
+
 if __name__ == "__main__":
     manager.run()

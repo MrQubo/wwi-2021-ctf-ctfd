@@ -28,7 +28,7 @@ def get_class_by_tablename(tablename):
 class Notifications(db.Model):
     __tablename__ = "notifications"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Text)
+    #  title = db.Column(db.Text)
     content = db.Column(db.Text)
     date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -83,6 +83,7 @@ class Pages(db.Model):
 class Challenges(db.Model):
     __tablename__ = "challenges"
     id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.String(80))
     name = db.Column(db.String(80))
     description = db.Column(db.Text)
     connection_info = db.Column(db.Text)
