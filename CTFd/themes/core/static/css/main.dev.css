@@ -8478,6 +8478,12 @@ main {
 .min-vh-100 {
   min-height: 100vh !important; }
 
+.jumbotron {
+  background-color: #000 !important; }
+
+div.card.bg-light.mb-4 {
+  background-color: #000 !important; }
+
 :root {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace; }
 

@@ -8,6 +8,14 @@
 @import "includes/utils/opacity.scss";
 @import "includes/utils/min-height.scss";
 
+.jumbotron {
+  background-color: #000 !important;
+}
+
+div.card.bg-light.mb-4 {
+  background-color: #000 !important;
+}
+
 :root {
   font-family: $font-family-base;
 }
