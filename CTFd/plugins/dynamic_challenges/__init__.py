@@ -11,18 +11,25 @@ from CTFd.plugins.migrations import upgrade
 from CTFd.utils.modes import get_model
 
 
+def score_formula(challenge, solves):
+    mini = 10
+    maxi = 500
+    a = 8.1
+    b = 2.43
+    # It is important that this calculation takes into account floats.
+    # Hence this file uses from __future__ import division
+    return math.ceil(mini + (maxi - mini) / (1 + (max(0, solves-1) / a) ** b))
+
+
 class DynamicChallenge(Challenges):
     __mapper_args__ = {"polymorphic_identity": "dynamic"}
     id = db.Column(
         db.Integer, db.ForeignKey("challenges.id", ondelete="CASCADE"), primary_key=True
     )
-    initial = db.Column(db.Integer, default=0)
-    minimum = db.Column(db.Integer, default=0)
-    decay = db.Column(db.Integer, default=0)
 
     def __init__(self, *args, **kwargs):
         super(DynamicChallenge, self).__init__(**kwargs)
-        self.value = kwargs["initial"]
+        self.value = 500
 
 
 class DynamicValueChallenge(BaseChallenge):
@@ -63,25 +70,8 @@ class DynamicValueChallenge(BaseChallenge):
             .count()
         )
 
-        # If the solve count is 0 we shouldn't manipulate the solve count to
-        # let the math update back to normal
-        if solve_count != 0:
-            # We subtract -1 to allow the first solver to get max point value
-            solve_count -= 1
+        challenge.value = score_formula(challenge, solve_count)
 
-        # It is important that this calculation takes into account floats.
-        # Hence this file uses from __future__ import division
-        value = (
-            ((challenge.minimum - challenge.initial) / (challenge.decay ** 2))
-            * (solve_count ** 2)
-        ) + challenge.initial
-
-        value = math.ceil(value)
-
-        if value < challenge.minimum:
-            value = challenge.minimum
-
-        challenge.value = value
         db.session.commit()
         return challenge
 
@@ -98,9 +88,6 @@ class DynamicValueChallenge(BaseChallenge):
             "id": challenge.id,
             "name": challenge.name,
             "value": challenge.value,
-            "initial": challenge.initial,
-            "decay": challenge.decay,
-            "minimum": challenge.minimum,
             "description": challenge.description,
             "connection_info": challenge.connection_info,
             "category": challenge.category,
@@ -127,12 +114,6 @@ class DynamicValueChallenge(BaseChallenge):
         :return:
         """
         data = request.form or request.get_json()
-
-        for attr, value in data.items():
-            # We need to set these to floats so that the next operations don't operate on strings
-            if attr in ("initial", "minimum", "decay"):
-                value = float(value)
-            setattr(challenge, attr, value)
 
         return DynamicValueChallenge.calculate_value(challenge)
 
